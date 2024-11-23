@@ -18,3 +18,7 @@ mobile_listResponse={
    
 }
 
+
+# pip freeze > requirements.txt
+# .\cost_analyzer\Scripts\Activate
+
