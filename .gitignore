@@ -1,0 +1,23 @@
+# Virtual environment
+/venv/
+cost_analyzer/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# IDE and editor-specific files
+.vscode/
+.idea/
+
+# macOS-specific files
+.DS_Store
+
+# Windows-specific files
+Thumbs.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# pipenv files (if you're using pipenv instead of virtualenv)
+Pipfile.lock
