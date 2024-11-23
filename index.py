@@ -42,9 +42,6 @@ def service():
     return response
     
     
-  
-
-
 
     
 if __name__=="__main__":
