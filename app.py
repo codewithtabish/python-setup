@@ -1,6 +1,15 @@
 from flask import Flask,jsonify
 from constants.index import product_list
 from constants.index import mobile_listResponse
+import os
+from dotenv import load_dotenv
+
+
+
+# Load the .env file
+load_dotenv()
+
+print("The DB URL IS ",os.getenv("DB_URL"))
 
 app=Flask(__name__)
 
@@ -41,7 +50,15 @@ def service():
     }
     return response
     
-    
+
+@app.route("/mood_checker")
+def mood_checker():
+    return "you are now in good mood 💞💞💞💞"
+
+@app.route("/live_score")
+def live_score():
+    return "This team will make 400 score !! "
+        
 
     
 if __name__=="__main__":
