@@ -21,3 +21,6 @@ Thumbs.db
 
 # pipenv files (if you're using pipenv instead of virtualenv)
 Pipfile.lock
+
+.env
+.env*
