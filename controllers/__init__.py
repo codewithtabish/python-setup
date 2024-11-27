@@ -4,6 +4,7 @@ import re
 import bcrypt
 from models import db
 from models.user_model import User
+from utils.send_email import send_email
 
 
 
@@ -72,5 +73,18 @@ def signup():
     db.session.add(new_user)
     db.session.commit()  # Save the changes to the database
 
+    send_email(name,email)
+
     return jsonify({"message": "User created successfully!"}), 201
 
+
+def get_all_users():
+    users = User.query.all()
+     # Prepare a list of dictionaries with the details you need
+    users_data = [
+        {"id": user.id, "name": user.name, "email": user.email} for user in users
+    ]
+    return jsonify({"users":users_data}), 200
+
+    
+    

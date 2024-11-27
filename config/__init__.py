@@ -1,8 +1,16 @@
 import os
 from dotenv import load_dotenv
+from flask_mail import Mail
+from flask import Flask
 
 # Load environment variables from a .env file
 load_dotenv()
+
+
+app = Flask(__name__)
+
+
+
 
 # General configurations
 DB_URL = os.getenv("DB_URL")

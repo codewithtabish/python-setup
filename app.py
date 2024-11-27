@@ -1,17 +1,16 @@
-from flask import Flask
 from dotenv import load_dotenv
 from config import DB_URL, DEBUG, PORT
 from routes.all_routes import routes  # Import the routes blueprint
 from models import db  # Import db from the models package
 from models.user_model import User
 import os
+from config import app
 
 
 
 # Load environment variables from .env file
 load_dotenv()
 
-app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URL')
 
 
