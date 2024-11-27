@@ -6,6 +6,7 @@ from models import db
 from models.user_model import User
 from utils.send_email import send_email
 from config import redis_client  # Import redis_client from config
+from utils.tags_extractor import get_video_tags
 
 
 
@@ -108,15 +109,31 @@ def get_all_users():
 
 
 
-def get_myaccount():
+def tags_extractor():
+    data=request.json
+    url=data['url']
+    # Check if 'url' is in the request payload
+    if not data or 'url' not in data:
+        return jsonify({"error": "A valid 'url' must be provided"}), 400
+    url = data['url']
+
+    # Validate the URL
+    if not url or not isinstance(url, str):
+        return jsonify({"error": "Invalid URL format"}), 400
+
+    tags = get_video_tags(url)
+
+    # Handle case where tags cannot be extracted (invalid URL or other issues)
+    if tags is None:
+        return jsonify({"error": "Failed to extract tags. Ensure the URL is valid."}), 400
+
+    return jsonify({"tags": tags}), 200
+
     
-    my_id=request.json    
-               # If not found in Redis, fetch users from the database
-    users = User.query.find(User.query.filter,my_id)
-    # 10000000 users 
-            # Prepare a list of dictionaries with the details you need
-    # users_data = [{"id": user.id, "name": user.name, "email": user.email} for user in users]
-    # users_data.filter(user.id==my_id)
+    
+    
+    
+ 
     
     
 
