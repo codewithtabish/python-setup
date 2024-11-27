@@ -105,7 +105,18 @@ def get_all_users():
             return jsonify({"users": users_data}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+
+def get_myaccount():
     
+    my_id=request.json    
+               # If not found in Redis, fetch users from the database
+    users = User.query.find(User.query.filter,my_id)
+    # 10000000 users 
+            # Prepare a list of dictionaries with the details you need
+    # users_data = [{"id": user.id, "name": user.name, "email": user.email} for user in users]
+    # users_data.filter(user.id==my_id)
     
     
 

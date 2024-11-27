@@ -5,13 +5,20 @@ FROM python:3.10-alpine
 WORKDIR /app
 
 # Install system dependencies (including Postgres client libraries and others if needed)
+# Clean up APK cache to reduce image size
 RUN apk update && apk add --no-cache \
     gcc \
     musl-dev \
     libpq-dev \
-    && rm -rf /var/cache/apk/*
+    libffi-dev \
+    openssl-dev \
+    python3-dev \
+    cargo
 
-# Copy the requirements.txt into the container
+# Upgrade pip to the latest version to avoid compatibility issues
+RUN pip install --upgrade pip
+
+# Copy only the requirements.txt first to leverage Docker caching
 COPY requirements.txt /app/
 
 # Install Python dependencies from requirements.txt
