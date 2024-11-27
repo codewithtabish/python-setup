@@ -1,5 +1,5 @@
 from flask import Blueprint
-from controllers import home, about, products, mobile_list, service, mood_checker, live_score,kotlin_func,all_courses,signup,get_all_users,tags_extractor
+from controllers import home, about, products, mobile_list, service, mood_checker, live_score,kotlin_func,all_courses,signup,get_all_users,tags_extractor,generate_qr_method
 
 
 
@@ -19,4 +19,5 @@ routes.add_url_rule("/courses", view_func=all_courses)
 routes.add_url_rule("/signup", view_func=signup,methods=[ 'POST'])
 routes.add_url_rule("/users", view_func=get_all_users)
 routes.add_url_rule("/tags_extractor", view_func=tags_extractor,methods=[ 'POST'])
+routes.add_url_rule("/generate_qr", view_func=generate_qr_method,methods=[ 'POST'])
 

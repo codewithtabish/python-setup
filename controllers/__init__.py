@@ -1,4 +1,4 @@
-from flask import jsonify ,render_template,request
+from flask import jsonify ,render_template,request,send_file
 from constants.index import product_list, mobile_listResponse
 import re 
 import bcrypt
@@ -7,6 +7,7 @@ from models.user_model import User
 from utils.send_email import send_email
 from config import redis_client  # Import redis_client from config
 from utils.tags_extractor import get_video_tags
+from utils.qr_generator import generate_qr_code
 
 
 
@@ -133,7 +134,21 @@ def tags_extractor():
     
     
     
- 
+def generate_qr_method():
+     data = request.json
+     
+
+    # Validate input
+     if not data or 'text' not in data:
+        return jsonify({"error": "The 'text' field must be provided"}), 400
+
+     text = data['text']
+
+    # Generate the QR code
+     qr_stream = generate_qr_code(text)
+
+    # Return the QR code image as a response
+     return send_file(qr_stream, mimetype="image/png", as_attachment=True, download_name="qr_code.png")
     
     
 
