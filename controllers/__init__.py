@@ -105,3 +105,9 @@ def get_all_users():
             return jsonify({"users": users_data}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+    
+    
+
+
+

@@ -5,6 +5,7 @@ from models import db  # Import db from the models package
 from models.user_model import User
 import os
 from config import app
+from flask import render_template
 
 
 
@@ -42,10 +43,12 @@ setup_database()
 
         
 
-
-
+@app.route('/')
+def home():
+    return "this is the home page"
 
 
 if __name__ == "__main__":
-    app.run(debug=DEBUG, port=PORT)
+    app.run(debug=True, host='0.0.0.0', port=9000)
+
 # cost_analyzer\Scripts\activate

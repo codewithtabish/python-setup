@@ -17,10 +17,9 @@ app = Flask(__name__)
 DB_URL = os.getenv("DB_URL")
 DEBUG = os.getenv("DEBUG", "True") == "True"  # Default to True if not set
 PORT = int(os.getenv("PORT"))  # Default to port 3000 if not set
-REDIS_URL = os.getenv("REDIS_URL")
+REDIS_URL = str(os.getenv("REDIS_URL"))
+print("REDIS_URL:", REDIS_URL)
 
 # Initialize Redis connection using the Redis URL
 redis_client = redis.from_url(REDIS_URL)
-# ("rediss://red-ct3ejri3esus73f5sdng:DqU0IsGdKRsbo2CxYYPz2ETiUYkWKvzu@singapore-redis.render.com:6379")
 
-# Other app-specific configurations can go here, such as email settings, etc.
