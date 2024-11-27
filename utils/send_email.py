@@ -100,3 +100,5 @@ def send_email(user_name, recipient_email):
     except Exception as e:
         print("Failed to send email:", str(e))
         return False
+
+

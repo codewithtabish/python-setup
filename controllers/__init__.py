@@ -5,6 +5,8 @@ import bcrypt
 from models import db
 from models.user_model import User
 from utils.send_email import send_email
+from config import redis_client  # Import redis_client from config
+
 
 
 
@@ -74,17 +76,32 @@ def signup():
     db.session.commit()  # Save the changes to the database
 
     send_email(name,email)
+        # Delete the 'users' list from Redis
+    redis_client.delete('users')  # This deletes the cached users from Redis
 
     return jsonify({"message": "User created successfully!"}), 201
 
 
 def get_all_users():
-    users = User.query.all()
-     # Prepare a list of dictionaries with the details you need
-    users_data = [
-        {"id": user.id, "name": user.name, "email": user.email} for user in users
-    ]
-    return jsonify({"users":users_data}), 200
+    try:
+        # Check if 'users' key exists in Redis
+        if redis_client.exists('users'):
+            # Fetch users from Redis
+            users_data = redis_client.get('users')
+            # Decode the byte string and convert it back to a list of dictionaries
+            users_data = users_data.decode('utf-8')  # Decode from bytes to string
+            users_data = eval(users_data)  # Convert the string back to a list of dictionaries
 
-    
-    
+            return jsonify({"users": users_data}), 200
+        else:
+            # If not found in Redis, fetch users from the database
+            users = User.query.all()
+            # Prepare a list of dictionaries with the details you need
+            users_data = [{"id": user.id, "name": user.name, "email": user.email} for user in users]
+
+            # Save users to Redis for future access (as a string representation of the list of dictionaries)
+            redis_client.set('users', str(users_data))
+
+            return jsonify({"users": users_data}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
