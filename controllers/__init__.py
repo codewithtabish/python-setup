@@ -8,6 +8,7 @@ from utils.send_email import send_email
 from config import redis_client  # Import redis_client from config
 from utils.tags_extractor import get_video_tags
 from utils.qr_generator import generate_qr_code
+from utils.currency_convertor import get_conversion_rate_utils
 
 
 
@@ -153,4 +154,37 @@ def generate_qr_method():
     
 
 
+def convert_currency():
+    data = request.json
+    from_currency = data.get("from_currency")
+    to_currency = data.get("to_currency")
+    amount = data.get("amount")
+    
+    if not from_currency or not to_currency or not amount:
+        return jsonify({"error": "Missing required parameters"}), 400
 
+    try:
+        amount = float(amount)
+    except ValueError:
+        return jsonify({"error": "Invalid amount format"}), 400
+
+    rates_data = get_conversion_rate_utils()
+    if rates_data and "rates" in rates_data:
+        rates = rates_data["rates"]
+        if from_currency not in rates or to_currency not in rates:
+            return jsonify({"error": "Currency not supported"}), 400
+
+        # Perform conversion
+        from_rate = rates[from_currency]
+        to_rate = rates[to_currency]
+        converted_amount = (to_rate / from_rate) * amount
+
+        return jsonify({
+            "from": from_currency,
+            "to": to_currency,
+            "amount": amount,
+            "converted_amount": round(converted_amount, 2),
+            "rate": round(to_rate / from_rate, 6)
+        })
+    else:
+        return jsonify({"error": "Unable to fetch exchange rates"}), 500
