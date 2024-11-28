@@ -9,7 +9,8 @@ from config import redis_client  # Import redis_client from config
 from utils.tags_extractor import get_video_tags
 from utils.qr_generator import generate_qr_code
 from utils.currency_convertor import get_conversion_rate_utils
-
+from utils.ip_info import get_ip_geolocation
+from utils.ip_info import get_full_domain_info
 
 
 
@@ -188,3 +189,66 @@ def convert_currency():
         })
     else:
         return jsonify({"error": "Unable to fetch exchange rates"}), 500
+    
+from flask import request, jsonify
+
+def ip_info():
+    """
+    Endpoint to get both IP geolocation and domain information.
+    
+    Query Parameters:
+    - ip: The IP address to lookup (optional).
+    - domain: The domain to lookup (optional).
+    
+    Returns:
+    - JSON response with the geolocation data of the IP and domain information.
+    """
+    ip_address = request.args.get('ip')  # Get the IP address from query parameters
+    domain_name = request.args.get('domain')  # Get the domain from query parameters
+    
+    # Initialize the response data
+    result = {}
+
+    # If an IP address is provided, get its geolocation info
+    if ip_address:
+        ip_geolocation = get_ip_geolocation(ip_address)  # Helper function for IP lookup
+        result['ip_info'] = ip_geolocation
+    
+    # If a domain name is provided, get its domain information
+    
+    # If neither IP nor domain is provided, return an error message
+    if not ip_address :
+        result['error'] = 'IP address must be provided.'
+
+    return jsonify(result)  # Return the response as JSON
+
+
+def domain_info():
+    """
+    Endpoint to get both IP geolocation and domain information.
+    
+    Query Parameters:
+    - ip: The IP address to lookup (optional).
+    - domain: The domain to lookup (optional).
+    
+    Returns:
+    - JSON response with the geolocation data of the IP and domain information.
+    """
+    domain_name = request.args.get('domain')  # Get the domain from query parameters
+    
+    # Initialize the response data
+    result = {}
+
+    
+    if domain_name:
+        domain_info = get_full_domain_info(domain_name)  # Helper function for domain lookup
+        result['domain_info'] = domain_info
+        # If neither IP nor domain is provided, return an error message
+    if not domain_name:
+        result['error'] = "Domain must be provided."    
+    
+
+
+    return jsonify(result)  # Return the response as JSON
+
+
