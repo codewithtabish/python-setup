@@ -11,6 +11,7 @@ from utils.qr_generator import generate_qr_code
 from utils.currency_convertor import get_conversion_rate_utils
 from utils.ip_info import get_ip_geolocation
 from utils.ip_info import get_full_domain_info
+from utils.image_text_extractor import extract_text_from_image_url
 
 
 
@@ -190,7 +191,6 @@ def convert_currency():
     else:
         return jsonify({"error": "Unable to fetch exchange rates"}), 500
     
-from flask import request, jsonify
 
 def ip_info():
     """
@@ -252,3 +252,20 @@ def domain_info():
     return jsonify(result)  # Return the response as JSON
 
 
+
+def ocr_from_url():
+    # Get the image URL from the request JSON data
+    data = request.get_json()
+    
+    if 'image_url' not in data:
+        return jsonify({'error': 'No image URL provided'}), 400
+    
+    image_url = data['image_url']
+    
+    # Extract text using OCR
+    extracted_text = extract_text_from_image_url(image_url)
+    
+    if extracted_text:
+        return jsonify({'extracted_text': extracted_text})
+    else:
+        return jsonify({'error': 'Failed to fetch or process the image from the URL'}), 400

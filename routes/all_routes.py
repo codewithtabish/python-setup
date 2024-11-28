@@ -1,5 +1,5 @@
 from flask import Blueprint
-from controllers import home, about, products, mobile_list, service, mood_checker, live_score,kotlin_func,all_courses,signup,get_all_users,tags_extractor,generate_qr_method,convert_currency,ip_info,domain_info
+from controllers import home, about, products, mobile_list, service, mood_checker, live_score,kotlin_func,all_courses,signup,get_all_users,tags_extractor,generate_qr_method,convert_currency,ip_info,domain_info,ocr_from_url
 
 
 
@@ -23,5 +23,6 @@ routes.add_url_rule("/generate_qr", view_func=generate_qr_method,methods=[ 'POST
 routes.add_url_rule("/conversion_rate", view_func=convert_currency,methods=[ 'POST'])
 routes.add_url_rule("/ip_info", view_func=ip_info)
 routes.add_url_rule("/domain_info", view_func=domain_info)
+routes.add_url_rule("/image_text_extractor", view_func=ocr_from_url,methods=[ 'POST'])
 
 
