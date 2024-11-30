@@ -12,6 +12,7 @@ from utils.currency_convertor import get_conversion_rate_utils
 from utils.ip_info import get_ip_geolocation
 from utils.ip_info import get_full_domain_info
 from utils.image_text_extractor import extract_text_from_image_url
+from utils.website_tags import extract_seo_tags_with_selenium
 
 
 
@@ -269,3 +270,21 @@ def ocr_from_url():
         return jsonify({'extracted_text': extracted_text})
     else:
         return jsonify({'error': 'Failed to fetch or process the image from the URL'}), 400
+    
+    
+def extract_seo():
+    # Get the URL from the request body
+    data = request.get_json()
+    print("data: ", data)
+    url = data.get('url')
+    print("url: ", url)
+
+    # Check if URL is provided
+    if not url:
+        return jsonify({"error": "URL is required"}), 400
+
+    # Extract SEO tags from the URL using the utility function
+    seo_tags = extract_seo_tags_with_selenium(url)
+
+    # Return the SEO tags as a JSON response
+    return jsonify(seo_tags)   
