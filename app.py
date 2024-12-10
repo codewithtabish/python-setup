@@ -5,7 +5,6 @@ from models import db  # Import db from the models package
 from models.user_model import User
 import os
 from config import app
-from flask import render_template
 from flask_cors import CORS
 
 
