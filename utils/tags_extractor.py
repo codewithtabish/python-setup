@@ -6,6 +6,8 @@ def get_video_tags_and_title(video_url):
         response = requests.get(video_url)
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
+            print("The url in the method again ",video_url)
+
 
             # Extract meta tag content for keywords (tags)
             meta_tags = soup.find("meta", attrs={"name": "keywords"})

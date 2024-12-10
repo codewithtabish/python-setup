@@ -147,6 +147,7 @@ def tags_extractor():
     if not url or not isinstance(url, str):
         return jsonify({"error": "Invalid URL format"}), 400
 
+    print("The url is ",url)
     tags = get_video_tags_and_title(url)
 
     # Handle case where tags cannot be extracted (invalid URL or other issues)
