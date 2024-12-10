@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from config import DB_URL, DEBUG, PORT
+from config import DB_URL, DEBUG
 from routes.all_routes import routes  # Import the routes blueprint
 from models import db  # Import db from the models package
 from models.user_model import User
@@ -25,6 +25,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URL')
 
 # Initialize SQLAlchemy with the db instance from models
 db.init_app(app)
+PORT = int(os.getenv("PORT"))  # Default to port 9000 if not set
+
 
 
 # Access your configurations
