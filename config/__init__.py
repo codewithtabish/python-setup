@@ -19,7 +19,7 @@ CORS(app)
 # General configurations
 DB_URL = os.getenv("DB_URL")
 DEBUG = os.getenv("DEBUG", "True") == "True"  # Default to True if not set
-PORT = int(os.getenv("PORT", 9000))  # Default to port 9000 if not set
+PORT = int(os.getenv("PORT"))  # Default to port 9000 if not set
 REDIS_URL = os.getenv("REDIS_URL")
 
 # Check if the required environment variables are present
