@@ -6,13 +6,15 @@ from models import db
 from models.user_model import User
 from utils.send_email import send_email
 from config import redis_client  # Import redis_client from config
-from utils.tags_extractor import get_video_tags
+from utils.tags_extractor import get_video_tags_and_title
 from utils.qr_generator import generate_qr_code
 from utils.currency_convertor import get_conversion_rate_utils
 from utils.ip_info import get_ip_geolocation
 from utils.ip_info import get_full_domain_info
 from utils.image_text_extractor import extract_text_from_image_url
 from utils.website_tags import extract_seo_tags_with_selenium
+import random
+import json
 
 
 
@@ -44,18 +46,67 @@ def signup():
     user=User.query.filter_by(email=email).first()
     if user:
         return jsonify({"message":"Email already exists"}),400
+    
        # Add the user to the database
     
-    # Create a new User instance
-    new_user = User(name=name, email=email, password=hashed_password)   
-    db.session.add(new_user)
-    db.session.commit()  # Save the changes to the database
+       # Generate a random 4-digit number
+    random_number = random.randint(1000, 9999)
+    # Save OTP and hashed password in Redis with a 5-minute expiration
+    redis_key = f"otp:{email}"
+    redis_data = {
+            "otp": random_number,
+            "hashed_password": hashed_password.decode('utf-8'),  # Decode bytes to string
+            "name": name
+        }
+    redis_client.setex(redis_key, 300, json.dumps(redis_data))  # Store as JSON
+    
 
-    send_email(name,email)
+    send_email(name,email,random_number)
+        # Create a new User instance
+    # new_user = User(name=name, email=email, password=hashed_password)   
+    # db.session.add(new_user)
+    # db.session.commit()  # Save the changes to the database
         # Delete the 'users' list from Redis
-    redis_client.delete('users')  # This deletes the cached users from Redis
 
-    return jsonify({"message": "User created successfully!"}), 201
+    return jsonify({"message": "email has been sent ,so verify that !"}), 201
+
+
+def verify_otp():
+    try:
+        data = request.json
+        email = data.get('email')
+        otp = data.get('otp')
+
+        if not email or not otp:
+            return jsonify({"message": "Email and OTP are required"}), 400
+
+        # Retrieve OTP and hashed password from Redis
+        redis_key = f"otp:{email}"
+        redis_data = redis_client.get(redis_key)
+
+        if not redis_data:
+            return jsonify({"message": "OTP expired or not found"}), 400
+
+        redis_data = json.loads(redis_data)  # Parse JSON
+        stored_otp = redis_data.get("otp")
+        hashed_password = redis_data.get("hashed_password")
+        name = redis_data.get("name")
+
+        if str(stored_otp) != str(otp):
+            return jsonify({"message": "Invalid OTP"}), 400
+
+        # OTP is valid, create user in the database
+        new_user = User(name=name, email=email, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Clean up Redis
+        redis_client.delete(redis_key)
+
+        return jsonify({"message": "Signup successful!"}), 201
+    except Exception as e:
+        return jsonify({"message": f"An error occurred: {str(e)}"}), 500
+
 
 
 def get_all_users():
@@ -96,13 +147,13 @@ def tags_extractor():
     if not url or not isinstance(url, str):
         return jsonify({"error": "Invalid URL format"}), 400
 
-    tags = get_video_tags(url)
+    tags = get_video_tags_and_title(url)
 
     # Handle case where tags cannot be extracted (invalid URL or other issues)
     if tags is None:
         return jsonify({"error": "Failed to extract tags. Ensure the URL is valid."}), 400
 
-    return jsonify({"tags": tags}), 200
+    return jsonify({"data": tags}), 200
 
     
     
@@ -258,3 +309,6 @@ def extract_seo():
 
     # Return the SEO tags as a JSON response
     return jsonify(seo_tags)   
+
+
+

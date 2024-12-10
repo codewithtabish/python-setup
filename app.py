@@ -6,10 +6,18 @@ from models.user_model import User
 import os
 from config import app
 from flask import render_template
+from flask_cors import CORS
+
+
+
+
 
 
 
 # Load environment variables from .env file
+
+CORS(app)
+
 load_dotenv()
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URL')
@@ -49,6 +57,11 @@ def home():
 
 
 if __name__ == "__main__":
+
     app.run(debug=True, host='0.0.0.0', port=9000)
 
 # cost_analyzer\Scripts\activate
+        # download_dir = r"C:\Users\Mark 1\Downloads"
+# 
+
+# docker run -it --rm redis:latest redis-cli -h singapore-redis.render.com -p 6379 -a DqU0IsGdKRsbo2CxYYPz2ETiUYkWKvzu --tls

@@ -1,25 +1,35 @@
 import requests
 from bs4 import BeautifulSoup
 
-def get_video_tags(video_url):
-    response = requests.get(video_url)
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
+def get_video_tags_and_title(video_url):
+    try:
+        response = requests.get(video_url)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Extract meta tag content
-        meta = soup.find("meta", attrs={"name": "keywords"})
-        if meta:
-            tags = meta["content"].split(",")
-            return [tag.strip() for tag in tags]
+            # Extract meta tag content for keywords (tags)
+            meta_tags = soup.find("meta", attrs={"name": "keywords"})
+            tags = meta_tags["content"].split(",") if meta_tags else None
+
+            # Extract title
+            title_tag = soup.find("title")
+            title = title_tag.text.strip() if title_tag else None
+
+            return {
+                "tags": [tag.strip() for tag in tags] if tags else None,
+                "title": title
+            }
         else:
             return None
-    else:
+    except Exception as e:
+        print(f"Error fetching video details: {e}")
         return None
 
-# # Example Usage
+# Example Usage
 # video_url = "https://www.youtube.com/watch?v=oQ5UfJqW5Jo"
-# tags = get_video_tags(video_url)
-# if tags:
-#     print("Extracted Tags:", tags)
+# result = get_video_tags_and_title(video_url)
+# if result:
+#     print("Extracted Tags:", result['tags'])
+#     print("Extracted Title:", result['title'])
 # else:
-#     print("No tags found or failed to fetch video metadata.")
+#     print("Failed to fetch video metadata.")

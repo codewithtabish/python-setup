@@ -8,10 +8,10 @@ SMTP_PORT = 587
 SENDER_EMAIL = "tabish169000@gmail.com"
 SENDER_PASSWORD = "lisryxexmzsoxjot"  # Your generated app password
 
-def send_email(user_name, recipient_email):
+def send_email(user_name, recipient_email, random_number):
     try:
         # HTML email content with inline CSS for styling
-        subject = f"Welcome to Our Platform, {user_name}!"
+        subject = f"Welcome to CodeWithTabish, {user_name}!"
         body = f"""
         <html>
         <head>
@@ -19,29 +19,34 @@ def send_email(user_name, recipient_email):
                 body {{
                     font-family: Arial, sans-serif;
                     color: #333;
-                    background-color: #f4f4f4;
+                    background-color: #f9f9f9;
                     margin: 0;
                     padding: 0;
                 }}
                 .container {{
                     width: 100%;
                     max-width: 600px;
-                    margin: 0 auto;
+                    margin: 20px auto;
                     padding: 20px;
                     background-color: #ffffff;
-                    border-radius: 8px;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    border-radius: 10px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 }}
                 .header {{
                     text-align: center;
                     padding: 20px;
-                    background-color: #4CAF50;
+                    background-color: #007bff;
                     color: white;
-                    border-radius: 8px 8px 0 0;
+                    border-radius: 10px 10px 0 0;
+                    font-size: 24px;
+                    font-weight: bold;
                 }}
                 .content {{
-                    margin: 20px 0;
+                    padding: 20px;
                     line-height: 1.6;
+                }}
+                .content h2 {{
+                    color: #007bff;
                 }}
                 .footer {{
                     text-align: center;
@@ -52,7 +57,7 @@ def send_email(user_name, recipient_email):
                     padding-top: 10px;
                 }}
                 .footer a {{
-                    color: #4CAF50;
+                    color: #007bff;
                     text-decoration: none;
                 }}
             </style>
@@ -60,22 +65,25 @@ def send_email(user_name, recipient_email):
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Welcome to CodeWithTabish, {user_name}!</h1>
+                    Welcome to CodeWithTabish!
                 </div>
                 <div class="content">
-                    <p>Hi {user_name},</p>
-                    <p>We're thrilled to have you on board. Here are a few things you can do next:</p>
+                    <p>Dear {user_name},</p>
+                    <p>We are delighted to welcome you to <strong>CodeWithTabish</strong>. Your journey towards mastering coding and technology begins here, and we are thrilled to be part of it.</p>
+                    <h2>Your One-Time Passcode (OTP): {random_number}</h2>
+                    <p>Please use this code to complete your account setup. For your security, do not share this code with anyone.</p>
+                    <p>Here’s what you can do next:</p>
                     <ul>
-                        <li>Explore your dashboard to see the amazing features we offer.</li>
-                        <li>If you have any questions, feel free to reach out to our support team.</li>
-                        <li>Stay tuned for updates and announcements directly to your inbox.</li>
+                        <li>Log in to your dashboard and explore our features.</li>
+                        <li>Access tutorials, resources, and support to accelerate your learning.</li>
+                        <li>Stay updated with our latest news and announcements.</li>
                     </ul>
-                    <p>We're excited to see what you'll achieve with us!</p>
+                    <p>If you have any questions or need assistance, our support team is here to help you at every step.</p>
                 </div>
                 <div class="footer">
-                    <p>Best regards,</p>
-                    <p>The CodeWithTabish Team</p>
-                    <p>Powered by <a href="https://www.codewithtabish.com">CodeWithTabish</a></p>
+                    <p>Warm regards,</p>
+                    <p>The <strong>CodeWithTabish</strong> Team</p>
+                    <p><a href="https://www.codewithtabish.com">Visit our website</a></p>
                 </div>
             </div>
         </body>
@@ -100,5 +108,3 @@ def send_email(user_name, recipient_email):
     except Exception as e:
         print("Failed to send email:", str(e))
         return False
-
-
