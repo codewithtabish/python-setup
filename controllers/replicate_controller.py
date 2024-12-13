@@ -46,10 +46,12 @@ def create_image():
         # Setup input for the replication model
         input_data = {
             "prompt": prompt,
+            
         }
 
         # Run the model with the given input
         output = replicate.run(
+            
             "ideogram-ai/ideogram-v2",
             input=input_data
         )
