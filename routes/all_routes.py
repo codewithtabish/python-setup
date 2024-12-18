@@ -2,6 +2,7 @@ from flask import Blueprint
 from controllers import home,signup,get_all_users,tags_extractor,generate_qr_method,convert_currency,ip_info,domain_info,ocr_from_url,extract_seo,verify_otp
 from controllers.video_controller import get_formats,download_video,get_job_status
 from controllers.replicate_controller import create_video,create_image
+from controllers.blogs_controller import create_blog,fetch_all_blogs,fetch_blog_by_slug
 
 
 
@@ -25,5 +26,8 @@ routes.add_url_rule("/download_video", view_func=download_video,methods=[ 'POST'
 routes.add_url_rule("/job_status", view_func=get_job_status)
 routes.add_url_rule("/create_video", view_func=create_video,methods=[ 'POST'])
 routes.add_url_rule("/create_image", view_func=create_image,methods=[ 'POST'])
+routes.add_url_rule("/create_blog", view_func=create_blog,methods=[ 'POST'])
+routes.add_url_rule("/blogs", view_func=fetch_all_blogs)
+routes.add_url_rule("/blog/<slug>", view_func=fetch_blog_by_slug,methods=[ 'GET'])
 
 

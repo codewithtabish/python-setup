@@ -3,6 +3,7 @@ from config import DB_URL, DEBUG
 from routes.all_routes import routes  # Import the routes blueprint
 from models import db  # Import db from the models package
 from models.user_model import User
+from models.blog_model import Blog
 import os
 from config import app
 from flask_cors import CORS
@@ -66,3 +67,4 @@ if __name__ == "__main__":
 # 
 
 # docker run -it --rm redis:latest redis-cli -h singapore-redis.render.com -p 6379 -a DqU0IsGdKRsbo2CxYYPz2ETiUYkWKvzu --tls
+
