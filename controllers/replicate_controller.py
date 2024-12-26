@@ -2,6 +2,8 @@ import replicate
 from flask import jsonify, request
 import os
 from dotenv import load_dotenv
+# import Replicate from "replicate";
+
 
 # Load environment variables
 load_dotenv()
@@ -36,35 +38,47 @@ def create_video():
         return jsonify({"error": "Failed to generate video"}), 500
 
 
-
 def create_image():
     try:
-        print("Yes I am at imeg")
-           # Get the prompt from the request
+        print("Yes, I am at image generation.")
+
+        # Get the prompt from the request
         prompt = request.json.get("prompt")
-        
+        if not prompt:
+            return jsonify({"error": "Prompt is required"}), 400
+
         # Setup input for the replication model
         input_data = {
             "prompt": prompt,
-            
+            "go_fast": True,
+            "megapixels": "1",
+            "num_outputs": 1,
+            "aspect_ratio": "1:1",
+            "output_format": "webp",
+            "output_quality": 80,
+            "num_inference_steps": 4
         }
 
         # Run the model with the given input
         output = replicate.run(
-            
-            "ideogram-ai/ideogram-v2",
+            "black-forest-labs/flux-schnell",
             input=input_data
         )
-        print("Generated image URL:", output)
-        # Extract URL or path from the FileOutput object
-        if hasattr(output, "url"):
-            image_url = output.url
+        print("Generated output:", output)
+
+        # Extract the first URL from the output
+        if isinstance(output, list) and all(isinstance(item, replicate.helpers.FileOutput) for item in output):
+            image_url = output[0].url  # Extract the first URL
         else:
             raise ValueError("Unexpected output format. Unable to extract image URL.")
 
-        return jsonify({"data": image_url})
-
+        # Return the URL in JSON format
+        return jsonify({"url": image_url}), 200
 
     except Exception as e:
         print(f"Error generating image: {e}")
-        return jsonify({"error": "Failed to generate image"}), 500
+        return jsonify({"error": "Failed to generate image", "details": str(e)}), 500
+
+
+
+
