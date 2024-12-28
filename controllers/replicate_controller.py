@@ -1,5 +1,5 @@
 import replicate
-from flask import jsonify, request
+from flask import jsonify, request,Response
 import os
 from dotenv import load_dotenv
 # import Replicate from "replicate";
@@ -80,5 +80,45 @@ def create_image():
         return jsonify({"error": "Failed to generate image", "details": str(e)}), 500
 
 
+from flask import request, Response
+import replicate
 
+def generate_music():
+    try:
+        # Get lyrics, song_file, bitrate, and sample_rate from the request
+        lyrics = request.json.get("lyrics")
+        # song_file = request.json.get("song_file")
+        # bitrate = request.json.get("bitrate", 256000)  # Default to 256000 if not provided
+        # sample_rate = request.json.get("sample_rate", 44100)  # Default to 44100 if not provided
 
+        # if not lyrics or not song_file:
+        #     return Response("Lyrics and song file are required", status=400)
+
+        # Setup input for the Replicate model
+        input_data = {
+            "lyrics": lyrics,
+              "bitrate": 256000,
+        "song_file": "https://replicate.delivery/pbxt/M9zum1Y6qujy02jeigHTJzn0lBTQOemB7OkH5XmmPSC5OUoO/MiniMax-Electronic.wav",
+        "sample_rate": 44100
+        }
+
+        # Run the Replicate model for music generation
+        output = replicate.run(
+            "minimax/music-01",
+            input=input_data
+        )
+
+        # Print the generated output (URL in this case)
+        print("Generated music output:", output)
+
+        # Return the output URL as plain text with proper headers for UTF-8 encoding
+
+        return  jsonify({"url": str(output)}), 200
+
+    except Exception as e:
+        # Catch exceptions and provide detailed error message
+        print(f"Error generating music: {e}")
+        response = Response(f"Failed to generate music: {str(e)}", status=500, mimetype='text/plain')
+        response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+
+        # return response
